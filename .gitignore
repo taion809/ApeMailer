@@ -1,0 +1,11 @@
+
+# Ignore composer
+composer.lock
+vendor/
+
+# Ignore PHPStorm
+.idea/
+
+# Ignore Mac Junk.
+.DS_Store
+
