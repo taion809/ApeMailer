@@ -1,8 +1,8 @@
 'use strict';
 
-var apeMailer = angular.module('apeMailer', []);
+var apeMailerControllers = angular.module('apeMailerControllers', []);
 
-apeMailer.controller('EmailDashboard', function EmailDashboard($scope, $http){
+apeMailerControllers.controller('EmailDashboard', ['$scope', '$http', function($scope, $http) {
     $http.get('/initialize').success(function(data) {
         $scope.user = data.user;
         $scope.user.username = splitEmail(data.user.email_addr);
@@ -23,7 +23,11 @@ apeMailer.controller('EmailDashboard', function EmailDashboard($scope, $http){
     }
 
     $scope.domain = 0;
-});
+}]);
+
+apeMailerControllers.controller('EmailDetails', ['$scope', '$routeParams', function($scope, $routeParams) {
+
+}]);
 
 function splitEmail(email) {
     var split = email.split('@');

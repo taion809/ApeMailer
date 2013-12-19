@@ -1,14 +1,17 @@
 {% verbatim %}
-<html ng-app="apeMailer">
+<!DOCTYPE html>
+<html ng-app="apeMailerApp">
     <head>
         <title>ApeMailer</title>
         <link type="text/css" rel="stylesheet" href="/assets/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="/assets/css/sidebar.css" />
         <link type="text/css" rel="stylesheet" href="/assets/css/override.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+        <script src="http://code.angularjs.org/1.2.5/angular-route.min.js"></script>
+        <script src="/assets/js/app.js"></script>
         <script src="/assets/js/controllers.js"></script>
     </head>
-    <body ng-controller="EmailDashboard">
+    <body>
     <div id="wrapper">
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
@@ -30,36 +33,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <input id='username' class="form-control" type="text" ng-model="user.username" />
-                    </div>
-                    <div class="col-md-2">
-                        <select id="domain" class="form-control" name="domain" ng-model="domain" ng-options="domain.id as domain.host for domain in domain_list">
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-sm btn-block btn-primary" ng-click="setEmail()">Go!</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <table class="table table-bordered table-striped table-hover">
-                            <thead>
-                                <th><span class="glyphicon glyphicon-check"></span> Select</th>
-                                <th>From</th>
-                                <th>Subject</th>
-                                <th>Date</th>
-                            </thead>
-                            <tr ng-repeat="email in email.list">
-                                <td><input type="checkbox" /></td>
-                                <td><span ng-bind="email.mail_from"></span></td>
-                                <td><span ng-bind="email.mail_subject"></span></td>
-                                <td><span ng-bind="email.mail_date"></span></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+                <div ng-view></div>
             </div>
         </div>
     </div>
