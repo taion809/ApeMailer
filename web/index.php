@@ -2,32 +2,60 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-use Johnsn\GuerrillaMail\GuerrillaConnect\CurlConnection;
-use Johnsn\GuerrillaMail\GuerrillaMail;
+use Johnsn\GuerrillaMail\Provider\Silex\GuerrillaServiceProvider as GuerrillaMailProvider;
+use Symfony\Component\HttpFoundation\Request;
 
 $app = new Silex\Application();
-
-$app['gm.connection'] = function() {
-    return new CurlConnection('127.0.0.1');
-};
-
-$app['gm.client'] = function($app) {
-    return new GuerrillaMail($app['gm.connection']);
-};
+$app['debug'] = false;
 
 $app->register(new Silex\Provider\SessionServiceProvider());
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/../views',
 ));
+$app->register(new GuerrillaMailProvider());
 
-$app->get('new', function() use ($app) {
-    $client = $app['gm.client'];
+$app->before(function (Request $request) {
+    if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
+        $data = json_decode($request->getContent(), true);
+        $request->request->replace(is_array($data) ? $data : array());
+    }
+});
 
-    $response = $client->get_email_address();
+$app->post('/me', function(Request $request) use ($app) {
+    if(null === $user = $app['session']->get('user')) {
+        return $app->json(array('message' => 'You are not logged in.'), 403);
+    }
 
-    var_dump($response);
+    $username = $request->get('username');
+    $user = $app['gm.client']->set_email_address($user['sid_token'], $username);
+    $app['session']->set('user', $user);
 
-    return true;
+    $response = array(
+        'user' => $user,
+        'email' => $app['gm.client']->get_email_list($user['sid_token']),
+    );
+
+    return $app->json($response);
+});
+
+$app->get('/initialize', function() use ($app) {
+    if(null === $user = $app['session']->get('user')) {
+        $user = $app['gm.client']->get_email_address();
+        $app['session']->set('user', $user);
+    }
+
+    $domainList = array();
+    foreach($app['gm.client']->domains as $key => $value) {
+        $domainList[] = array("id" => $key, "host" => $value);
+    }
+
+    $response = array(
+        'user' => $user,
+        'email' => $app['gm.client']->get_email_list($user['sid_token']),
+        'domain_list' => $domainList,
+    );
+
+    return $app->json($response, 200);
 });
 
 $app->get('/', function() use ($app) {
