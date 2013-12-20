@@ -22,16 +22,36 @@ apeMailerControllers.controller('EmailDashboard', ['$scope', '$http', function($
         });
     }
 
+    $scope.deleteEmail = function(emailId) {
+        $http({method: 'DELETE', url: '/remove', params: { email_id: emailId }})
+            .success(function(data){
+                for(var i = 0; i < data.email.length; i++) {
+                    for(var j = 0; j < $scope.email.list.length; j++) {
+                        if($scope.email.list[j].mail_id == data.email[i]) {
+                            $scope.email.list.splice(j, 1);
+                        }
+                    }
+                }
+            });
+    }
+
     $scope.domain = 0;
 }]);
 
-apeMailerControllers.controller('EmailDetails', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+apeMailerControllers.controller('EmailDetails', ['$scope', '$http', '$routeParams', '$location', function($scope, $http, $routeParams, $location) {
     $http.get('/fetch', { params: { email_id: $routeParams.email_id } }).success(function(data) {
         $scope.user = data.user;
         $scope.email = data.email;
 
         console.log(data);
     });
+
+    $scope.deleteEmail = function(emailId) {
+        $http({method: 'DELETE', url: '/remove', params: { email_id: emailId }})
+            .success(function(data){
+                $location.path('/');
+            });
+    }
 }]);
 
 function splitEmail(email) {

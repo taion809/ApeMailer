@@ -7,19 +7,23 @@
         </select>
     </div>
     <div class="col-md-2">
-        <button type="button" class="btn btn-sm btn-block btn-primary" ng-click="setEmail()">Go!</button>
+        <button type="button" class="btn btn-sm btn-block btn-primary" ng-click="setEmail()"><strong>Go!</strong></button>
     </div>
 </div>
 <div class="row"  style="padding-top: 10px;">
     <div class="col-lg-12">
         <table class="table table-bordered table-striped table-hover">
             <thead>
-            <th><span class="glyphicon glyphicon-check"></span> Select</th>
-            <th>Email</th>
-            <th>Date</th>
+            <th><span class="glyphicon glyphicon-wrench"></span> Action</th>
+            <th><span class="glyphicon glyphicon-envelope"></span> Email</th>
+            <th><span class="glyphicon glyphicon-calendar"></span> Date</th>
             </thead>
             <tr ng-repeat="email in email.list">
-                <td><input type="checkbox" /></td>
+                <td>
+                    <button type="button" class="btn btn-warning btn-xs" role="button" ng-click="deleteEmail(email.mail_id)">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </button>
+                </td>
                 <td>
                     <a href="/#/emails/{{ email.mail_id }}">
                         <strong><span ng-bind="email.mail_from"></span>:</strong>&nbsp;
