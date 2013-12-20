@@ -21,6 +21,23 @@ $app->before(function (Request $request) {
     }
 });
 
+$app->get('/fetch', function(Request $request) use ($app) {
+    if(null === $user = $app['session']->get('user')) {
+        return $app->json(array('message' => 'You are not logged in.'), 403);
+    }
+
+    $emailId = $request->get('email_id');
+
+    $email = $app['gm.client']->fetch_email($user['sid_token'], $emailId);
+
+    $response = array(
+        'user' => $user,
+        'email' => $email,
+    );
+
+    return $app->json($response);
+});
+
 $app->post('/me', function(Request $request) use ($app) {
     if(null === $user = $app['session']->get('user')) {
         return $app->json(array('message' => 'You are not logged in.'), 403);

@@ -25,8 +25,13 @@ apeMailerControllers.controller('EmailDashboard', ['$scope', '$http', function($
     $scope.domain = 0;
 }]);
 
-apeMailerControllers.controller('EmailDetails', ['$scope', '$routeParams', function($scope, $routeParams) {
+apeMailerControllers.controller('EmailDetails', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+    $http.get('/fetch', { params: { email_id: $routeParams.email_id } }).success(function(data) {
+        $scope.user = data.user;
+        $scope.email = data.email;
 
+        console.log(data);
+    });
 }]);
 
 function splitEmail(email) {
