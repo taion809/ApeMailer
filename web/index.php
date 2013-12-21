@@ -79,7 +79,7 @@ $app->get('/initialize', function() use ($app) {
     }
 
     $domainList = array();
-    foreach($app['gm.client']->domains as $key => $value) {
+    foreach($app['gm.client']->getDomainList() as $key => $value) {
         $domainList[] = array("id" => $key, "host" => $value);
     }
 
