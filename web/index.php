@@ -28,7 +28,7 @@ $app->delete('/remove', function(Request $request) use ($app) {
 
     $emailId = $request->get('email_id');
 
-    $email = $app['gm.client']->del_email($user['sid_token'], array($emailId));
+    $email = $app['gm.client']->deleteEmail($user['sid_token'], array($emailId));
 
     $response = array(
         'user' => $user,
@@ -45,7 +45,7 @@ $app->get('/fetch', function(Request $request) use ($app) {
 
     $emailId = $request->get('email_id');
 
-    $email = $app['gm.client']->fetch_email($user['sid_token'], $emailId);
+    $email = $app['gm.client']->fetchEmail($user['sid_token'], $emailId);
 
     $response = array(
         'user' => $user,
@@ -61,12 +61,12 @@ $app->post('/me', function(Request $request) use ($app) {
     }
 
     $username = $request->get('username');
-    $user = $app['gm.client']->set_email_address($user['sid_token'], $username);
+    $user = $app['gm.client']->setEmailAddress($user['sid_token'], $username);
     $app['session']->set('user', $user);
 
     $response = array(
         'user' => $user,
-        'email' => $app['gm.client']->get_email_list($user['sid_token']),
+        'email' => $app['gm.client']->getEmailList($user['sid_token']),
     );
 
     return $app->json($response);
@@ -74,7 +74,7 @@ $app->post('/me', function(Request $request) use ($app) {
 
 $app->get('/initialize', function() use ($app) {
     if(null === $user = $app['session']->get('user')) {
-        $user = $app['gm.client']->get_email_address();
+        $user = $app['gm.client']->getEmailAddress();
         $app['session']->set('user', $user);
     }
 
@@ -85,7 +85,7 @@ $app->get('/initialize', function() use ($app) {
 
     $response = array(
         'user' => $user,
-        'email' => $app['gm.client']->get_email_list($user['sid_token']),
+        'email' => $app['gm.client']->getEmailList($user['sid_token']),
         'domain_list' => $domainList,
     );
 
